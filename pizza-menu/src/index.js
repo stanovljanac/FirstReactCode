@@ -65,7 +65,7 @@ function Header() {
   );
 }
 
-function Menu() {
+function Menu(props) {
   const pizzas = pizzaData.length;
 
   return (
@@ -73,32 +73,36 @@ function Menu() {
       <h2>Our menu</h2>
 
       {pizzas > 0 ? (
-        <ul className="pizzas">
-          {pizzaData.map((pizza) => (
-            <Pizza pizzaObj={pizza} key={pizza.name} />
-          ))}
-        </ul>
+        <>
+          <p>Authentic Italian cuisine. 6 reative dishes to choose from.</p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name} />
+            ))}
+          </ul>{" "}
+        </>
       ) : (
-        "Nesto nesto"
+        <p>We're still working on our menu</p>
       )}
     </main>
   );
 }
-function Pizza(props) {
-  if (props.pizzaObj.soldOut) return null;
+function Pizza({ pizzaObj }) {
+  //
   return (
-    <li className="pizza">
-      <img src={props.pizzaObj.photoName} alt={props.name} />
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
       <div>
-        <h3>{props.pizzaObj.name}</h3>
-        <p>{props.pizzaObj.ingredients}</p>
-        <span>{props.pizzaObj.price + 3}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        {/* {pizzaObj.soldOut ? <span>SOLD OUT</span> : pizzaObj.price} */}
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
       </div>
     </li>
   );
 }
 
-function Footer() {
+function Footer(props) {
   const hour = new Date().getHours();
   const openHour = 15;
   const closeHour = 22;
@@ -111,12 +115,10 @@ function Footer() {
   );
 }
 
-function Order(props) {
+function Order({ closeHour }) {
   return (
     <div className="order">
-      <p>
-        We're open until {props.closeHour}:00. Come visit us or order online.
-      </p>
+      <p>We're open until {closeHour}:00. Come visit us or order online.</p>
       <button className="btn">Order</button>
     </div>
   );
