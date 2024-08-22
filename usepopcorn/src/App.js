@@ -41,7 +41,7 @@ export default function App() {
       const controller = new AbortController(); // Za otkazivanje prethodnih zahteva
       const signal = controller.signal;
 
-      const debounceTimeout = setTimeout(async () => {
+      async function fetchMovies() {
         if (!query.trim()) return; // Ne šalji prazan query
 
         try {
@@ -68,10 +68,12 @@ export default function App() {
         } finally {
           setIsLoading(false);
         }
-      }, 500); // Debounce na 500ms
+      }
+
+      handleCloseMovie();
+      fetchMovies();
 
       return () => {
-        clearTimeout(debounceTimeout); // Očisti prethodni timeout
         controller.abort(); // Otkazivanje prethodnog zahteva ako je u toku
       };
     },
@@ -109,7 +111,8 @@ export default function App() {
               <Summary watched={watched} />
               <MovieList
                 movies={watched}
-                Component={WatchedMovie} onDeleteWatched={handleDeleteMovie}
+                Component={WatchedMovie}
+                onDeleteWatched={handleDeleteMovie}
               />
             </>
           )}
