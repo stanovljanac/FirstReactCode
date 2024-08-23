@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Navbar from "./NavBar";
 import Main from "./Main";
 import Search from "./Search";
@@ -9,16 +9,12 @@ import Summary from "./Summary";
 import MovieDetails from "./MovieDetails";
 import WatchedMovie from "./WatchedMovie";
 import Movie from "./Movie";
-
-const KEY = "7a8911ba"; //f84fc31d
-const tempQuery = "interstellar";
+import { useMovies } from "./useMovies";
 
 export default function App() {
   const [query, setQuery] = useState("");
-  const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  const { movies, isLoading, error } = useMovies(query, handleCloseMovie);
   // const [watched, setWatched] = useState([]);
 
   // Lazy initial State
@@ -47,50 +43,6 @@ export default function App() {
       localStorage.setItem("watched", JSON.stringify(watched));
     },
     [watched]
-  );
-
-  useEffect(
-    function () {
-      const controller = new AbortController(); // Za otkazivanje prethodnih zahteva
-      const signal = controller.signal;
-
-      async function fetchMovies() {
-        if (!query.trim()) return; // Ne šalji prazan query
-
-        try {
-          setError("");
-          setIsLoading(true);
-
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-            { signal }
-          );
-
-          if (!res.ok)
-            throw new Error("Something went wrong with fetching movies");
-
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("Movie not found");
-
-          setMovies(data.Search);
-        } catch (err) {
-          if (err.name !== "AbortError") {
-            // Ignoriši grešku ako je fetch otkazan
-            setError(err.message);
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      handleCloseMovie();
-      fetchMovies();
-
-      return () => {
-        controller.abort(); // Otkazivanje prethodnog zahteva ako je u toku
-      };
-    },
-    [query]
   );
 
   return (
