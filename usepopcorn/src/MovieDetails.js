@@ -28,6 +28,19 @@ export default function MovieDetails({
     Genre: genre,
   } = movie;
 
+  // Bad Practice
+  // const [isTop, setIsTop] = useState(imdbRating > 8);
+
+  // useEffect(
+  //   function () {
+  //     setIsTop(imdbRating > 8);
+  //   },
+  //   [imdbRating]
+  // );
+
+  // Use derived state
+  const isTop = imdbRating > 8;
+
   function handleAddMovie() {
     const newWatchedMovie = {
       imdbID: selectedId,
