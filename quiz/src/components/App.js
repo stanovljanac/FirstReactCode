@@ -7,11 +7,14 @@ import Error from "./Error";
 import StartScreen from "../StartScreen";
 import Question from "../Question";
 import Option from "./Option";
+import NextButton from "./NextButton";
+import Progress from "./Progress";
 const initialState = {
   questions: [],
   status: "loading", // loading, error, ready, active, finished
   index: 0,
   answer: null,
+  points: 0,
 };
 
 function reducer(state, action) {
@@ -25,8 +28,19 @@ function reducer(state, action) {
     case "start":
       return { ...state, status: "active" };
 
+    case "next":
+      return { ...state, index: state.index + 1, answer: null };
+
     case "newAnswer":
-      return { ...state, answer: action.payload };
+      const question = state.questions.at(state.index);
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          action.payload === question.correctOption
+            ? state.points + question.points
+            : state.points,
+      };
 
     default:
       throw new Error("Action uknown");
@@ -34,12 +48,16 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ questions, status, index, answer }, dispatch] = useReducer(
+  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
     reducer,
     initialState
   );
 
   const numQuestions = questions.length;
+  const maxPossiblePoints = questions.reduce(
+    (acc, curr) => acc + curr.points,
+    0
+  );
   useEffect(function () {
     async function fetchQuestions() {
       try {
@@ -62,13 +80,23 @@ export default function App() {
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
         {status === "active" && (
-          <Question questionName={questions[index].question}>
-            <Option
-              question={questions[index]}
-              dispatch={dispatch}
+          <>
+            <Progress
+              numQuestions={numQuestions}
+              index={index}
+              points={points}
+              maxPossiblePoints={maxPossiblePoints}
               answer={answer}
-            />
-          </Question>
+            ></Progress>
+            <Question questionName={questions[index].question}>
+              <Option
+                question={questions[index]}
+                dispatch={dispatch}
+                answer={answer}
+              />
+            </Question>
+            <NextButton dispatch={dispatch} answer={answer}></NextButton>
+          </>
         )}
       </Main>
     </div>
