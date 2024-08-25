@@ -9,13 +9,20 @@ import Question from "../Question";
 import Option from "./Option";
 import NextButton from "./NextButton";
 import Progress from "./Progress";
+import FinishScreen from "./FinishScreen";
+import Timer from "./Timer";
+import Footer from "./Foter";
 const initialState = {
   questions: [],
   status: "loading", // loading, error, ready, active, finished
   index: 0,
   answer: null,
   points: 0,
+  highScore: 0,
+  secondsRemaining: null,
 };
+
+const SECS_PER_QUESTION = 30;
 
 function reducer(state, action) {
   switch (action.type) {
@@ -26,10 +33,22 @@ function reducer(state, action) {
       return { ...state, status: "error" };
 
     case "start":
-      return { ...state, status: "active" };
+      return {
+        ...state,
+        status: "active",
+        secondsRemaining: state.questions.length * SECS_PER_QUESTION,
+      };
 
     case "next":
       return { ...state, index: state.index + 1, answer: null };
+
+    case "finish":
+      return {
+        ...state,
+        status: "finished",
+        highScore:
+          state.points > state.highScore ? state.points : state.highScore,
+      };
 
     case "newAnswer":
       const question = state.questions.at(state.index);
@@ -42,16 +61,26 @@ function reducer(state, action) {
             : state.points,
       };
 
+    case "restart":
+      return { ...initialState, questions: state.questions, status: "ready" };
+
+    case "tick":
+      return {
+        ...state,
+        secondsRemaining: state.secondsRemaining - 1,
+        status: state.secondsRemaining === 0 ? "finished" : state.status,
+      };
+
     default:
       throw new Error("Action uknown");
   }
 }
 
 export default function App() {
-  const [{ questions, status, index, answer, points }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [
+    { questions, status, index, answer, points, highScore, secondsRemaining },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce(
@@ -95,8 +124,24 @@ export default function App() {
                 answer={answer}
               />
             </Question>
-            <NextButton dispatch={dispatch} answer={answer}></NextButton>
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+              <NextButton
+                numQuestions={numQuestions}
+                index={index}
+                dispatch={dispatch}
+                answer={answer}
+              ></NextButton>
+            </Footer>
           </>
+        )}
+        {status === "finished" && (
+          <FinishScreen
+            highScore={highScore}
+            max={maxPossiblePoints}
+            points={points}
+            dispatch={dispatch}
+          />
         )}
       </Main>
     </div>
