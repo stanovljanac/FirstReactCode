@@ -1,6 +1,7 @@
 import styles from "./Login.module.css";
 import { useState } from "react";
 import PageNav from "./PageNav";
+import { Link } from "react-router-dom";
 
 function Login() {
   // PRE-FILL FOR DEV PURPOSES
@@ -32,7 +33,9 @@ function Login() {
         </div>
 
         <div>
-          <button>Login</button>
+          <Link to="/login" className={styles.ctaLink}>
+            <button>Login</button>
+          </Link>
         </div>
       </form>
     </main>
