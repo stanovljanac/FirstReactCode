@@ -10,28 +10,9 @@ import { useUrlPosition } from "../hooks/useUrlPosition";
 import Message from "./Message";
 import Spinner from "./Spinner";
 import DatePicker from "react-datepicker";
-import { useCities } from "../contexts/CitiesContext";
+import { useCities } from "../contexts/useCities";
 import { useNavigate } from "react-router-dom";
-
-export function convertToEmoji(countryCode) {
-  const codePoints = countryCode
-    .toUpperCase()
-    .split("")
-    .map((char) => 127397 + char.charCodeAt());
-  return String.fromCodePoint(...codePoints);
-}
-
-export function flagemojiToPNG(flag) {
-  // Convert flag emoji to corresponding country code
-  const countryCode = Array.from(flag, (codeUnit) => codeUnit.codePointAt())
-    .map((char) => String.fromCharCode(char - 127397).toLowerCase())
-    .join("");
-
-  // Return an image element with the country's flag
-  return (
-    <img src={`https://flagcdn.com/24x18/${countryCode}.png`} alt="flag" />
-  );
-}
+import { convertToEmoji, flagemojiToPNG } from "./convertToEmoji";
 
 const BASE_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 

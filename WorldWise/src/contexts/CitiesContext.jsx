@@ -1,7 +1,7 @@
-import { createContext, useCallback, useContext, useReducer } from "react";
+import { createContext, useCallback, useReducer } from "react";
 
 const BASE_URL = "http://localhost:8000";
-const CitiesContext = createContext();
+export const CitiesContext = createContext();
 
 const initialState = {
   cities: [],
@@ -134,11 +134,4 @@ function CitiesProvider({ children }) {
   );
 }
 
-function useCities() {
-  const context = useContext(CitiesContext);
-  if (context === undefined)
-    throw new Error("CitiesContext used outside of the CitiesProvider");
-  return context;
-}
-
-export { CitiesProvider, useCities };
+export { CitiesProvider };

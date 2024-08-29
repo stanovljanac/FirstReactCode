@@ -1,12 +1,30 @@
 import styles from "./Login.module.css";
-import { useState } from "react";
-import PageNav from "./PageNav";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import PageNav from "../components/PageNav";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/useAuth";
+import Button from "../components/Button";
 
 function Login() {
   // PRE-FILL FOR DEV PURPOSES
+  const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
   const [email, setEmail] = useState("jack@example.com");
   const [password, setPassword] = useState("qwerty");
+
+  useEffect(
+    function () {
+      isAuthenticated && navigate("/app", { replace: true });
+    },
+    [isAuthenticated, navigate]
+  );
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (email && password) login(email, password);
+    navigate("/app");
+  }
 
   return (
     <main className={styles.login}>
@@ -34,7 +52,9 @@ function Login() {
 
         <div>
           <Link to="/login" className={styles.ctaLink}>
-            <button>Login</button>
+            <Button type="primary" onClick={handleSubmit}>
+              Login
+            </Button>
           </Link>
         </div>
       </form>
