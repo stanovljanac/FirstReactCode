@@ -116,21 +116,19 @@ function CitiesProvider({ children }) {
     }
   }
 
+  const value = {
+    cities,
+    isLoading,
+    currentCity,
+    getCity,
+    createCity,
+    deleteCity,
+    error,
+    fetchCities,
+  };
+
   return (
-    <CitiesContext.Provider
-      value={{
-        cities,
-        isLoading,
-        currentCity,
-        getCity,
-        createCity,
-        deleteCity,
-        error,
-        fetchCities,
-      }}
-    >
-      {children}
-    </CitiesContext.Provider>
+    <CitiesContext.Provider value={value}>{children}</CitiesContext.Provider>
   );
 }
 
