@@ -18,13 +18,13 @@ import SpinnerFullPage from "./components/SpinnerFullPage";
 // import PageNotFound from "./pages/PageNotFound";
 // import ProtectedRoute from "./pages/ProtectedRoute";
 
-const Homepage = lazy(() => import("./pages/HomePage"));
-const Pricing = lazy(() => import("./pages/Pricing"));
-const Login = lazy(() => import("./pages/Login"));
-const AppLayout = lazy(() => import("./pages/AppLayout"));
-const PageNotFound = lazy(() => import("./pages/PageNotFound"));
-const Product = lazy(() => import("./pages/Product"));
-const ProtectedRoute = lazy(() => import("./pages/ProtectedRoute"));
+const Homepage = lazy(() => import("./pages/HomePage.jsx"));
+const Pricing = lazy(() => import("./pages/Pricing.jsx"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const AppLayout = lazy(() => import("./pages/AppLayout.jsx"));
+const PageNotFound = lazy(() => import("./pages/PageNotFound.jsx"));
+const Product = lazy(() => import("./pages/Product.jsx"));
+const ProtectedRoute = lazy(() => import("./pages/ProtectedRoute.jsx"));
 
 function App() {
   return (
