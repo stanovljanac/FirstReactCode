@@ -1,7 +1,6 @@
-import jsonServer from "json-server";
-import path from "path";
-import { fileURLToPath } from "url";
-import cors from "cors";
+const jsonServer = require("json-server");
+const path = require("path");
+const cors = require("cors");
 
 const app = jsonServer.create();
 const router = jsonServer.router(path.join(__dirname, "db.json"));
@@ -14,11 +13,9 @@ app.use(
     "/api/*": "/$1",
   })
 );
-app.use(router);
+app.use("/api", router);
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`JSON Server is running on port ${port}`);
 });
-
-module.exports = server;
