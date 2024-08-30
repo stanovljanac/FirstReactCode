@@ -1,6 +1,7 @@
 import { createContext, useCallback, useReducer } from "react";
 
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "https://jsonserver-worldwise.vercel.app/api";
+
 export const CitiesContext = createContext();
 
 const initialState = {
