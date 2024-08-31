@@ -1,6 +1,7 @@
 import { createContext, useCallback, useReducer } from "react";
 
-const BASE_URL = "http://localhost:3000/cities";
+const BASE_URL = "https://json-server-one-gamma.vercel.app/api";
+// const BASE_URL = "http://localhost:3000";
 
 export const CitiesContext = createContext();
 
@@ -59,7 +60,7 @@ function CitiesProvider({ children }) {
     dispatch({ type: "loading" });
 
     try {
-      const res = await fetch(`${BASE_URL}/`);
+      const res = await fetch(`${BASE_URL}/cities`);
       const data = await res.json();
       dispatch({ type: "cities/loaded", payload: data });
     } catch {
@@ -77,7 +78,7 @@ function CitiesProvider({ children }) {
       dispatch({ type: "loading" });
 
       try {
-        const res = await fetch(`${BASE_URL}/${id}`);
+        const res = await fetch(`${BASE_URL}/cities/${id}`);
         const data = await res.json();
         dispatch({ type: "city/loaded", payload: data });
       } catch {
@@ -93,7 +94,7 @@ function CitiesProvider({ children }) {
   async function createCity(id) {
     try {
       dispatch({ type: "loading" });
-      const res = await fetch(`${BASE_URL}/`, {
+      const res = await fetch(`${BASE_URL}/cities`, {
         method: "POST",
         body: JSON.stringify(id),
         headers: { "Content-Type": "application/json" },
@@ -108,7 +109,7 @@ function CitiesProvider({ children }) {
   async function deleteCity(id) {
     try {
       dispatch({ type: "loading" });
-      await fetch(`${BASE_URL}/${id}`, {
+      await fetch(`${BASE_URL}/cities/${id}`, {
         method: "DELETE",
       });
       dispatch({ type: "city/deleted", payload: id });
