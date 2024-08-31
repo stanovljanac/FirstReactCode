@@ -1,7 +1,6 @@
 import { createContext, useCallback, useReducer } from "react";
 
 const BASE_URL = "https://json-server-one-gamma.vercel.app/api";
-// const BASE_URL = "http://localhost:3000";
 
 export const CitiesContext = createContext();
 
